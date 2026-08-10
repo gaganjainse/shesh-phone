@@ -57,7 +57,8 @@ class Phone:
         r = self.runner(self._adb("exec-out", "screencap", "-p"))
         if not r.ok:
             return False
-        Path(dest).write_bytes(r.stdout.encode("latin-1") if isinstance(r.stdout, str) else r.stdout)
+        data = r.stdout.encode("latin-1") if isinstance(r.stdout, str) else r.stdout
+        Path(dest).write_bytes(data)
         return True
 
     # ── input ─────────────────────────────────────────────────────────
