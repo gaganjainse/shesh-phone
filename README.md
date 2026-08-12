@@ -21,3 +21,8 @@ uv sync --extra dev
 uv run pytest -q        # 7 offline tests (adb is faked)
 uv run ruff check .
 ```
+
+## Security
+
+Security posture and vulnerability reporting: [canonical ecosystem security
+policy](https://github.com/gaganjainse/shesh-ecosystem/blob/main/SECURITY.md).
