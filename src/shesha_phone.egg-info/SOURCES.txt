@@ -1,10 +1,10 @@
 README.md
 pyproject.toml
-src/shesha_phone/phone.py
-src/shesha_phone/runner.py
-src/shesha_phone.egg-info/PKG-INFO
-src/shesha_phone.egg-info/SOURCES.txt
-src/shesha_phone.egg-info/dependency_links.txt
-src/shesha_phone.egg-info/requires.txt
-src/shesha_phone.egg-info/top_level.txt
+src/shesh_phone/phone.py
+src/shesh_phone/runner.py
+src/shesh_phone.egg-info/PKG-INFO
+src/shesh_phone.egg-info/SOURCES.txt
+src/shesh_phone.egg-info/dependency_links.txt
+src/shesh_phone.egg-info/requires.txt
+src/shesh_phone.egg-info/top_level.txt
 tests/test_phone.py
