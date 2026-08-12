@@ -1,3 +1,15 @@
+Metadata-Version: 2.4
+Name: shesh-phone
+Version: 0.1.0
+Summary: Shesh Soma: ADB control for Android (Realme Narzo target) with safe-bounds tapping
+Author: Gagan Jain
+License: GPL-3.0-or-later
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: ruff>=0.6; extra == "dev"
+
 # 📱 shesh-phone
 
 **ADB control for an Android phone** (target: Realme Narzo on CachyOS).

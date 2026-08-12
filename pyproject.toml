@@ -1,7 +1,7 @@
 [project]
-name = "shesha-phone"
+name = "shesh-phone"
 version = "0.1.0"
-description = "Shesha Soma: ADB control for Android (Realme Narzo target) with safe-bounds tapping"
+description = "Shesh Soma: ADB control for Android (Realme Narzo target) with safe-bounds tapping"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "GPL-3.0-or-later" }

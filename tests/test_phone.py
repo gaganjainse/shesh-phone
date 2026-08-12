@@ -1,4 +1,4 @@
-"""Offline tests for shesha-phone (no device/adb needed)."""
+"""Offline tests for shesh-phone (no device/adb needed)."""
 from __future__ import annotations
 
 import sys
@@ -6,8 +6,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from shesha_phone.phone import Bounds, Phone  # noqa: E402
-from shesha_phone.runner import Result  # noqa: E402
+from shesh_phone.phone import Bounds, Phone  # noqa: E402
+from shesh_phone.runner import Result  # noqa: E402
 
 
 def fake_runner(stdout="", returncode=0, binary=False):

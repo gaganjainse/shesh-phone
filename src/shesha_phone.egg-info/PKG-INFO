@@ -1,4 +1,16 @@
-# 📱 shesh-phone
+Metadata-Version: 2.4
+Name: shesha-phone
+Version: 0.1.0
+Summary: Shesha Soma: ADB control for Android (Realme Narzo target) with safe-bounds tapping
+Author: Gagan Jain
+License: GPL-3.0-or-later
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: ruff>=0.6; extra == "dev"
+
+# 📱 shesha-phone
 
 **ADB control for an Android phone** (target: Realme Narzo on CachyOS).
 Safe-bounds tapping, swipes, text input, screenshots, and app launching — with
@@ -6,7 +18,7 @@ all `adb` calls injectable so it's fully testable offline.
 
 - License: GPL-3.0
 - Layer: Soma
-- Part of: [Shesh ecosystem](https://github.com/gaganjainse/shesh-ecosystem)
+- Part of: [Shesha ecosystem](https://github.com/gaganjainse/shesha-ecosystem)
 
 ## Design
 
