@@ -24,6 +24,10 @@ jobs:
       - name: Install
         run: |
           python -m pip install --upgrade pip
-          pip install -e . --no-deps -q 2>/dev/null || pip install -r requirements.txt -q
+          if [ -f pyproject.toml ]; then
+            pip install -e . --no-deps -q
+          else
+            pip install -r requirements.txt -q
+          fi
       - name: Hot-path benchmarks
         run: python benchmarks/bench_hotpaths.py
