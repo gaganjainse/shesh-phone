@@ -9,7 +9,9 @@ authors = [{ name = "Gagan Jain" }]
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=9.1", "ruff>=0.16"]
+dev = ["pytest>=9.1", "ruff>=0.16", "pillow>=11.1.0"]
+# TemplateVision (vision_loop) requires pillow at runtime
+vision = ["pillow>=11.1.0"]
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]
