@@ -24,6 +24,6 @@ jobs:
       - name: Install
         run: |
           python -m pip install --upgrade pip
-          pip install -e . --no-deps -q 2>/dev/null || pip install -r requirements.txt -q 2>/dev/null || true
+          pip install -e . --no-deps -q 2>/dev/null || pip install -r requirements.txt -q
       - name: Hot-path benchmarks
         run: python benchmarks/bench_hotpaths.py
