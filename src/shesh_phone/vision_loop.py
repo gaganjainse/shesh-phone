@@ -118,19 +118,54 @@ class TemplateVision:
             return None
         if screen.size[0] < templ.size[0] or screen.size[1] < templ.size[1]:
             return None
-        # Exhaustive template match via normalized difference.
+        # Coarse-to-fine template match: the naive exhaustive scan is
+        # O(W*H) pixel diffs in pure Python — measured ~1.65 s on a
+        # 400x800 screen (benchmarks/bench_hotpaths.py). Downsample both
+        # images 4x, find the best coarse position, then refine at full
+        # resolution in a small window around it.
+        scale = 4
+        sw, sh = screen.size
+        tw, th = templ.size
+        small_screen = screen.resize((sw // scale, sh // scale), Image.BOX)
+        small_templ = templ.resize((tw // scale, th // scale), Image.BOX)
+        ssw, ssh = small_screen.size
+        stw, sth = small_templ.size
+
         best: tuple[float, int, int] | None = None
-        for y in range(0, screen.size[1] - templ.size[1] + 1, 2):
-            for x in range(0, screen.size[0] - templ.size[0] + 1, 2):
-                crop = screen.crop((x, y, x + templ.size[0], y + templ.size[1]))
-                diff = ImageChops.difference(crop, templ)
-                hist = diff.histogram()
-                total_diff = sum(i * count for i, count in enumerate(hist))
-                score = 1.0 - total_diff / (255.0 * templ.size[0] * templ.size[1])
+        for y in range(0, ssh - sth + 1, 2):
+            for x in range(0, ssw - stw + 1, 2):
+                crop = small_screen.crop((x, y, x + stw, y + sth))
+                score = 1.0 - sum(
+                    i * count
+                    for i, count in enumerate(
+                        ImageChops.difference(crop, small_templ).histogram()
+                    )
+                ) / (255.0 * stw * sth)
                 if best is None or score > best[0]:
                     best = (score, x, y)
         if best is None or best[0] < self.threshold:
             return None
+        score, cx, cy = best
+        # Convert coarse position to full-res coordinates immediately so a
+        # tie in refinement can never leak coarse coordinates back out.
+        x, y = cx * scale, cy * scale
+        best = (score, x, y)
+        # Refine at full resolution: scan a small window around the coarse
+        # match (>= so an equal full-res score replaces the coarse one).
+        win = max(4, scale * 2)  # ±win pixels around the coarse match
+        x0 = max(0, x - win)
+        y0 = max(0, y - win)
+        x1 = min(sw - tw, x + win)
+        y1 = min(sh - th, y + win)
+        for yy in range(y0, y1 + 1):
+            for xx in range(x0, x1 + 1):
+                crop = screen.crop((xx, yy, xx + tw, yy + th))
+                score = 1.0 - sum(
+                    i * count
+                    for i, count in enumerate(ImageChops.difference(crop, templ).histogram())
+                ) / (255.0 * tw * th)
+                if score >= best[0]:
+                    best = (score, xx, yy)
         score, x, y = best
         return Target(
             x + templ.size[0] // 2,
