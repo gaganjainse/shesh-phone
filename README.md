@@ -11,7 +11,11 @@ all `adb` calls injectable so it's fully testable offline.
 ## Design
 
 - A safe area (default `Bounds(0,100,1080,2100)`) refuses taps into the status/nav bars.
-- Vision/OCR is **not** here — the caller supplies an image model and calls `tap()`.
+- Vision/OCR: `shesh_phone.vision_loop.VisionTapLoop` implements the
+  screenshot → locate → tap → verify loop (retries honestly, refuses taps
+  outside the safe area). The vision provider is injected: use the built-in
+  `TemplateVision` (PIL template matcher, offline) or any model callable.
+  9 tests cover the loop + matcher.
 - No secrets; adb serial is configurable per-device.
 
 ## Develop
