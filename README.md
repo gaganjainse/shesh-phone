@@ -30,6 +30,10 @@ uv run ruff check .
   injected (built-in `TemplateVision` is a PIL template matcher, fully offline).
 - **No secrets** — the adb serial is configurable per device.
 
+
+> **Reproducible install:** `uv.lock` pins the full dependency tree. Install with
+> `uv sync --frozen` (or `uv pip install -r <(uv export --frozen)`) for a locked build.
+
 ## Status
 
 Component CI is green (reusable ecosystem pipeline). Security posture and

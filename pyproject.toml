@@ -14,7 +14,9 @@ dev = ["pytest>=9.1", "ruff>=0.16", "pillow>=11.1.0"]
 vision = ["pillow>=11.1.0"]
 
 [tool.uv]
-environments = ["sys_platform == 'linux'"]
+
+[tool.uv.sources]
+shesh-core = { path = "../shesh-core", editable = true }
 
 [tool.ruff]
 line-length = 100
