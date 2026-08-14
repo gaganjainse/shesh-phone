@@ -1,35 +1,45 @@
 # 📱 shesh-phone
 
-**ADB control for an Android phone** (target: Realme Narzo on CachyOS).
-Safe-bounds tapping, swipes, text input, screenshots, and app launching — with
-all `adb` calls injectable so it's fully testable offline.
+> **ADB control for an Android phone** (target: Realme Narzo on CachyOS). Safe-bounds
+> tapping, swipes, text input, screenshots, and app launching — with all `adb`
+> calls injectable so it's fully testable offline.
 
-- License: GPL-3.0-or-later
-- Layer: Soma
-- Part of: [Shesh ecosystem](https://github.com/gaganjainse/shesh-ecosystem)
+![Python](https://img.shields.io/badge/Python-3.11%2B-blue?style=for-the-badge&logo=python) ![License](https://img.shields.io/badge/License-GPL--3.0--or--later-blue?style=for-the-badge) ![Tests](https://img.shields.io/badge/Tests-16-success?style=for-the-badge) ![CI](https://github.com/gaganjainse/shesh-phone/actions/workflows/ci.yml.yml/badge.svg)
 
-## Design
+- **License:** GPL-3.0-or-later
+- **Owner:** Gagan Jain ([@gaganjainse](https://github.com/gaganjainse))
+- **Layer:** Soma (sensors & actuators)
+- **Part of:** [shesh-ecosystem](https://github.com/gaganjainse/shesh-ecosystem)
 
-- A safe area (default `Bounds(0,100,1080,2100)`) refuses taps into the status/nav bars.
-- Vision/OCR: `shesh_phone.vision_loop.VisionTapLoop` implements the
-  screenshot → locate → tap → verify loop (retries honestly, refuses taps
-  outside the safe area). The vision provider is injected: use the built-in
-  `TemplateVision` (PIL template matcher, offline) or any model callable.
-  9 tests cover the loop + matcher.
-- No secrets; adb serial is configurable per-device.
+---
 
-## Develop
+## Quick start
 
 ```bash
 uv sync --extra dev
-uv run pytest -q        # 7 offline tests (adb is faked)
+uv run pytest -q        # 16 offline tests (adb is faked)
 uv run ruff check .
 ```
 
-## Security
+## Design
 
-Security posture and vulnerability reporting: [canonical ecosystem security
-policy](https://github.com/gaganjainse/shesh-ecosystem/blob/main/SECURITY.md).
-## 📚 Docs
+- A **safe area** (default `Bounds(0,100,1080,2100)`) refuses taps into the
+  status/nav bars.
+- **Vision/OCR:** `VisionTapLoop` runs the screenshot → locate → tap → verify loop,
+  retries honestly, and refuses taps outside the safe area. The vision provider is
+  injected (built-in `TemplateVision` is a PIL template matcher, fully offline).
+- **No secrets** — the adb serial is configurable per device.
 
-Fleet-wide reading compilation: [shesh-docs](https://github.com/gaganjainse/shesh-docs).
+## Status
+
+Component CI is green (reusable ecosystem pipeline). Security posture and
+vulnerability reporting: [SECURITY.md](SECURITY.md).
+
+## Documentation index
+
+- **Part of:** [shesh-ecosystem](https://github.com/gaganjainse/shesh-ecosystem)
+- **Compiled reading:** [shesh-docs](https://github.com/gaganjainse/shesh-docs)
+
+## License
+
+GPL-3.0-or-later — see [LICENSE](LICENSE).
