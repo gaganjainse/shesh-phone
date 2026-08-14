@@ -4,7 +4,7 @@
 > tapping, swipes, text input, screenshots, and app launching — with all `adb`
 > calls injectable so it's fully testable offline.
 
-![Python](https://img.shields.io/badge/Python-3.11%2B-blue?style=for-the-badge&logo=python) ![License](https://img.shields.io/badge/License-GPL--3.0--or--later-blue?style=for-the-badge) ![Tests](https://img.shields.io/badge/Tests-16-success?style=for-the-badge) ![CI](https://github.com/gaganjainse/shesh-phone/actions/workflows/ci.yml.yml/badge.svg)
+![Python](https://img.shields.io/badge/Python-3.11%2B-blue?style=for-the-badge&logo=python) ![License](https://img.shields.io/badge/License-GPL--3.0--or--later-blue?style=for-the-badge) ![Tests](https://img.shields.io/badge/Tests-16-success?style=for-the-badge) ![CI](https://img.shields.io/github/actions/workflow/status/gaganjainse/shesh-phone/ci.yml?style=for-the-badge&label=CI)
 
 - **License:** GPL-3.0-or-later
 - **Owner:** Gagan Jain ([@gaganjainse](https://github.com/gaganjainse))
