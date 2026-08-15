@@ -4,7 +4,7 @@
 > tapping, swipes, text input, screenshots, and app launching — with all `adb`
 > calls injectable so it's fully testable offline.
 
-![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python) ![License](https://img.shields.io/badge/License-GPL--3.0--or--later-blue) ![Tests](https://img.shields.io/badge/Tests-16-success) ![CI](https://github.com/gaganjainse/shesh-phone/actions/workflows/ci.yml/badge.svg)
+![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python) ![License](https://img.shields.io/badge/License-GPL--3.0--or--later-blue) ![Tests](https://img.shields.io/badge/Tests-17-success) ![CI](https://github.com/gaganjainse/shesh-phone/actions/workflows/ci.yml/badge.svg)
 
 - **License:** GPL-3.0-or-later
 - **Owner:** Gagan Jain ([@gaganjainse](https://github.com/gaganjainse))
@@ -17,7 +17,7 @@
 
 ```bash
 uv sync --extra dev
-uv run pytest -q        # 16 offline tests (adb is faked)
+uv run pytest -q        # 17 offline tests (adb is faked)
 uv run ruff check .
 ```
 
