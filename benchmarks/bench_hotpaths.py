@@ -15,7 +15,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from shesh_phone.phone import Bounds, Phone  # noqa: E402
+from shesh_phone.phone import Bounds  # noqa: E402
 from shesh_phone.runner import Result  # noqa: E402
 from shesh_phone.vision_loop import Target, TemplateVision, VisionTapLoop  # noqa: E402
 
