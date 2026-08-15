@@ -110,5 +110,6 @@ def test_safe_area_is_queried_once():
         return Result("Physical size: 1080x2400", "", 0)
 
     p = Phone(runner=runner)
-    p.safe_area, p.safe_area, p.safe_area
-    assert len(calls) == 1, "screen size should be cached"
+    seen = [p.safe_area, p.safe_area, p.safe_area]
+    assert len(set(map(id, seen))) == 1, "the cached object should be reused"
+    assert len(calls) == 1, "screen size should be queried once"
