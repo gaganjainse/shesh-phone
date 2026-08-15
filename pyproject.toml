@@ -1,7 +1,11 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "shesh-phone"
 version = "0.1.0"
-description = "Shesh Soma: ADB control for Android (Realme Narzo target) with safe-bounds tapping"
+description = "Shesh Phone: safe Android device control over ADB"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "GPL-3.0-or-later" }
@@ -9,7 +13,7 @@ authors = [{ name = "Gagan Jain" }]
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=9.1", "ruff>=0.16", "pillow>=11.1.0"]
+dev = ["pytest>=9.1,<10", "pytest-asyncio>=0.24,<2", "ruff>=0.16,<1"]
 # TemplateVision (vision_loop) requires pillow at runtime
 vision = ["pillow>=11.1.0"]
 
@@ -27,6 +31,7 @@ select = ["E", "F", "W", "UP", "B", "SIM", "I"]
 ignore = ["E402"]
 
 [tool.pytest.ini_options]
+asyncio_mode = "auto"
 
 pythonpath = ["src"]
 testpaths = ["tests"]
