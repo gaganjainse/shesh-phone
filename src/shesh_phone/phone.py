@@ -20,6 +20,10 @@ class Bounds:
         return self.x <= x <= self.x + self.w and self.y <= y <= self.y + self.h
 
 
+_STATUS_BAR_PX = 100
+_NAV_BAR_PX = 100
+
+
 class Phone:
     def __init__(self, serial: str | None = None,
                  runner: Callable[..., Result] = _run,
@@ -27,7 +31,8 @@ class Phone:
         self.serial = serial
         self.runner = runner
         # Safe area prevents taps in status/nav bars.
-        self.safe_area = safe_area or Bounds(0, 100, 1080, 2100)
+        self._safe_area = safe_area
+        self._safe_area_cache: Bounds | None = None
 
     def _adb(self, *args: str) -> list[str]:
         cmd = ["adb"]
@@ -52,15 +57,42 @@ class Phone:
                 return int(w), int(h)
         return None
 
+    @property
+    def safe_area(self) -> Bounds:
+        """Region of the screen that is safe to tap.
+
+        Derived from the device's real resolution rather than assuming one
+        model. The status bar and navigation bar are excluded. An explicit
+        safe_area passed to the constructor always wins.
+        """
+        if self._safe_area is not None:
+            return self._safe_area
+        if self._safe_area_cache is not None:
+            return self._safe_area_cache
+        size = self.screen_size()
+        if size:
+            w, h = size
+            self._safe_area_cache = Bounds(0, _STATUS_BAR_PX, w, h - _NAV_BAR_PX)
+        else:
+            # Device unreachable: refuse the whole screen rather than guess a
+            # resolution and tap somewhere unintended.
+            self._safe_area_cache = Bounds(0, 0, 0, 0)
+        return self._safe_area_cache
+
     def screenshot(self, dest: str) -> bool:
-        # adb exec-out screencap avoids a temp file on device. The PNG bytes
-        # must be captured in binary mode: the default text path decodes with
-        # errors="replace", which would corrupt the image (and latin-1 re-encode
-        # then raises on the U+FFFD replacement characters).
+        """Pull a PNG screenshot to dest.
+
+        binary=True is required: the default runner decodes stdout with
+        errors="replace", which corrupts every byte above 0x7F and yields an
+        invalid PNG.
+        """
         r = self.runner(self._adb("exec-out", "screencap", "-p"), binary=True)
         if not r.ok:
             return False
-        Path(dest).write_bytes(r.stdout)
+        data = r.stdout
+        if isinstance(data, str):  # a runner that ignored binary=True
+            return False
+        Path(dest).write_bytes(data)
         return True
 
     # ── input ─────────────────────────────────────────────────────────
