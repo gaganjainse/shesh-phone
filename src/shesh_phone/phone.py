@@ -53,12 +53,14 @@ class Phone:
         return None
 
     def screenshot(self, dest: str) -> bool:
-        # adb exec-out screencap avoids a temp file on device.
-        r = self.runner(self._adb("exec-out", "screencap", "-p"))
+        # adb exec-out screencap avoids a temp file on device. The PNG bytes
+        # must be captured in binary mode: the default text path decodes with
+        # errors="replace", which would corrupt the image (and latin-1 re-encode
+        # then raises on the U+FFFD replacement characters).
+        r = self.runner(self._adb("exec-out", "screencap", "-p"), binary=True)
         if not r.ok:
             return False
-        data = r.stdout.encode("latin-1") if isinstance(r.stdout, str) else r.stdout
-        Path(dest).write_bytes(data)
+        Path(dest).write_bytes(r.stdout)
         return True
 
     # ── input ─────────────────────────────────────────────────────────

@@ -58,6 +58,23 @@ def test_swipe_and_type():
     assert "%s" in joined  # spaces escaped
 
 
+def test_screenshot_writes_raw_binary_png(tmp_path):
+    # Regression: screenshot() must request binary=True from the runner and
+    # write the bytes untouched. The old path decoded to str with
+    # errors="replace" and re-encoded as latin-1, corrupting (and usually
+    # raising on) any PNG containing non-UTF-8 bytes.
+    png = b"\x89PNG\r\n\x1a\n" + b"\x00\xff\xfe\x80" * 64
+
+    def runner(cmd, **kw):
+        assert kw.get("binary") is True, "screenshot must request binary output"
+        return Result(png, "", 0)
+
+    p = Phone(runner=runner)
+    dest = tmp_path / "shot.png"
+    assert p.screenshot(str(dest)) is True
+    assert dest.read_bytes() == png
+
+
 def test_serial_passed_to_adb():
     r = fake_runner()
     Phone(serial="emulator-5554", runner=r).press("HOME")
