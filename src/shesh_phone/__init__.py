@@ -1,4 +1,4 @@
-"""shesha-phone: ADB-based phone control (Realme Narzo target).
+"""shesh-phone: ADB-based phone control (Realme Narzo target).
 
 Inspired by the macOS phone-harness OCR/vision->tap loop, but built on Android
 Debug Bridge. All adb calls go through an injectable runner so tests don't need
