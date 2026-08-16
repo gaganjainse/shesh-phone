@@ -30,7 +30,7 @@ class Phone:
                  safe_area: Bounds | None = None) -> None:
         self.serial = serial
         self.runner = runner
-        # Safe area prevents taps in status/nav bars.
+        # Safe area prevents taps/swipes in status/nav bars.
         self._safe_area = safe_area
         self._safe_area_cache: Bounds | None = None
 
@@ -59,11 +59,10 @@ class Phone:
 
     @property
     def safe_area(self) -> Bounds:
-        """Region of the screen that is safe to tap.
+        """Region of the screen that is safe to tap/swipe.
 
         Derived from the device's real resolution rather than assuming one
-        model. The status bar and navigation bar are excluded. An explicit
-        safe_area passed to the constructor always wins.
+        model. An explicit safe_area passed to the constructor always wins.
         """
         if self._safe_area is not None:
             return self._safe_area
@@ -72,10 +71,11 @@ class Phone:
         size = self.screen_size()
         if size:
             w, h = size
-            self._safe_area_cache = Bounds(0, _STATUS_BAR_PX, w, h - _NAV_BAR_PX)
+            safe_h = max(0, h - _NAV_BAR_PX - _STATUS_BAR_PX)
+            self._safe_area_cache = Bounds(0, _STATUS_BAR_PX, w, safe_h)
         else:
             # Device unreachable: refuse the whole screen rather than guess a
-            # resolution and tap somewhere unintended.
+            # resolution and tap/swipe somewhere unintended.
             self._safe_area_cache = Bounds(0, 0, 0, 0)
         return self._safe_area_cache
 
@@ -102,11 +102,19 @@ class Phone:
         return self.runner(self._adb("shell", "input", "tap", str(x), str(y)))
 
     def swipe(self, x1: int, y1: int, x2: int, y2: int, ms: int = 300) -> Result:
+        if not self.safe_area.contains(x1, y1) or not self.safe_area.contains(x2, y2):
+            return Result(
+                "",
+                f"refusing swipe outside safe area: ({x1},{y1}) -> ({x2},{y2})",
+                1,
+            )
+        if ms < 0:
+            return Result("", "refusing swipe with negative duration", 1)
         return self.runner(self._adb(
             "shell", "input", "swipe", str(x1), str(y1), str(x2), str(y2), str(ms)))
 
     def type_text(self, text: str) -> Result:
-        # Escape spaces for adb shell input.
+        # Escape spaces for adb shell input without invoking a local shell.
         return self.runner(self._adb("shell", "input", "text", text.replace(" ", "%s")))
 
     def press(self, key: str = "BACK") -> Result:
@@ -118,5 +126,7 @@ class Phone:
                                      "android.intent.category.LAUNCHER", "1"))
 
     def current_focus(self) -> str:
-        r = self.runner(self._adb("shell", "dumpsys", "window", "|", "grep", "-E", "mCurrentFocus"))
+        # Avoid relying on shell metacharacter parsing inside adb arguments.
+        r = self.runner(self._adb(
+            "shell", "sh", "-c", "dumpsys window | grep -E 'mCurrentFocus|mFocusedApp'"))
         return r.stdout.strip()
