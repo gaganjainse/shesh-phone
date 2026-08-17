@@ -50,7 +50,7 @@ def test_tap_refused_outside_safe_area():
 
 def test_swipe_and_type():
     r = fake_runner()
-    p = Phone(runner=r)
+    p = Phone(runner=r, safe_area=Bounds(0, 0, 1080, 2400))
     p.swipe(100, 500, 100, 1000)
     p.type_text("hello world")
     joined = " ".join(" ".join(c) for c in r.calls)

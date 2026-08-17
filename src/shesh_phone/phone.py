@@ -102,6 +102,10 @@ class Phone:
         return self.runner(self._adb("shell", "input", "tap", str(x), str(y)))
 
     def swipe(self, x1: int, y1: int, x2: int, y2: int, ms: int = 300) -> Result:
+        if ms < 0:
+            return Result("", "refusing negative swipe duration", 1)
+        if not self.safe_area.contains(x1, y1) or not self.safe_area.contains(x2, y2):
+            return Result("", f"refusing swipe outside safe area: ({x1},{y1})->({x2},{y2})", 1)
         return self.runner(self._adb(
             "shell", "input", "swipe", str(x1), str(y1), str(x2), str(y2), str(ms)))
 
@@ -118,5 +122,5 @@ class Phone:
                                      "android.intent.category.LAUNCHER", "1"))
 
     def current_focus(self) -> str:
-        r = self.runner(self._adb("shell", "dumpsys", "window", "|", "grep", "-E", "mCurrentFocus"))
+        r = self.runner(self._adb("shell", "sh", "-c", "dumpsys window | grep -E mCurrentFocus"))
         return r.stdout.strip()
